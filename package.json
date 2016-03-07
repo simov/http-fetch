@@ -10,9 +10,18 @@
     "type": "git",
     "url": "https://github.com/simov/natty.git"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "qs": "^6.1.0"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.10",
+    "loca": "^1.0.1",
+    "mocha": "^2.4.5"
+  },
   "main": "index.js",
   "files": [],
-  "scripts": {}
+  "scripts": {
+    "test": "npm run test-ci",
+    "test-ci": "electron test"
+  }
 }

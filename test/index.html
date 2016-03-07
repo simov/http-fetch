@@ -1,0 +1,17 @@
+
+<script>
+  var path = require('path')
+
+  var Mocha = require('mocha')
+  var mocha = new Mocha
+  mocha.reporter('loca')
+  mocha.bail(true)
+  mocha.slow(1000)
+  // mocha.timeout(1000*60*60)
+
+  mocha.addFile(path.resolve(__dirname, 'test.js'))
+
+  mocha.run((failures) => {
+    console.log('DONE!')
+  })
+</script>
