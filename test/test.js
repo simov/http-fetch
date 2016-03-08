@@ -112,6 +112,21 @@ describe('fetch', () => {
     })
   })
 
+  it('no callback', (done) => {
+    server.once('request', (req, res) => res.end(req.url))
+    request({
+      method: 'GET',
+      url: 'http://localhost:6767',
+      qs: {a: 1}
+    })
+      .then((result) => {
+        var res = result[0], body = result[1]
+        should.equal(body, '/?a=1')
+        done()
+      })
+      .catch(done)
+  })
+
   after((done) => {
     server.close(done)
     socket.destroy()

@@ -41,23 +41,34 @@ module.exports = (options) => {
   var promise = fetch(new Request(url, init))
 
   if (options.callback) {
-    promise = promise
+    promise
       .then((res) => {
-        if (!options.parse) {
-          return res.text().then((body) => {
-            options.callback(null, res, body)
-          })
+        if (options.encoding === 'binary') {
+          res.blob().then((body) => options.callback(null, res, body))
+        }
+        else if (!options.parse) {
+          res.text().then((body) => options.callback(null, res, body))
         }
         else if (options.parse.json) {
-          return res.json().then((body) => {
-            options.callback(null, res, body)
-          })
+          res.json().then((body) => options.callback(null, res, body))
         }
       })
       .catch((err) => {
         options.callback(err)
       })
   }
-
-  return promise
+  else {
+    return promise
+      .then((res) => {
+        if (options.encoding === 'binary') {
+          return res.blob().then((body) => Promise.resolve([res, body]))
+        }
+        else if (!options.parse) {
+          return res.text().then((body) => Promise.resolve([res, body]))
+        }
+        else if (options.parse.json) {
+          return res.json().then((body) => Promise.resolve([res, body]))
+        }
+      })
+  }
 }
