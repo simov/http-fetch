@@ -5,17 +5,31 @@ var qs = require('qs')
 module.exports = (options) => {
 
   var url = options.url
-  if (options.qs) {
-    url = url + '?' + qs.stringify(options.qs)
-  }
+  var init = {}
 
-  var request = new Request(url)
+  if (options.qs) {
+    if (typeof options.qs === 'object') {
+      url = url + '?' + qs.stringify(options.qs)
+    }
+    else if (typeof options.qs === 'string') {
+      url = url + '?' + options.qs
+    }
+  }
 
   if (options.method) {
-    request.method = options.method
+    init.method = options.method
   }
 
-  var promise = fetch(request)
+  if (options.form) {
+    if (typeof options.form === 'object') {
+      init.body = qs.stringify(options.form)
+    }
+    else if (typeof options.form === 'string') {
+      init.body = options.form
+    }
+  }
+
+  var promise = fetch(new Request(url, init))
 
   if (options.callback) {
     promise = promise
