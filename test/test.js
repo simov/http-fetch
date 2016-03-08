@@ -69,6 +69,34 @@ describe('fetch', () => {
     })
   })
 
+  it('json object', (done) => {
+    server.once('request', (req, res) => req.pipe(res))
+    request({
+      method: 'POST',
+      url: 'http://localhost:6767',
+      json: {a: 1},
+      callback: (err, res, body) => {
+        if (err) return done(err)
+        should.equal(body, '{"a":1}')
+        done()
+      }
+    })
+  })
+
+  it('json string', (done) => {
+    server.once('request', (req, res) => req.pipe(res))
+    request({
+      method: 'POST',
+      url: 'http://localhost:6767',
+      json: '{"a":1}',
+      callback: (err, res, body) => {
+        if (err) return done(err)
+        should.equal(body, '{"a":1}')
+        done()
+      }
+    })
+  })
+
   after((done) => {
     server.close(done)
     socket.destroy()

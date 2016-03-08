@@ -29,6 +29,15 @@ module.exports = (options) => {
     }
   }
 
+  if (options.json) {
+    if (typeof options.json === 'object') {
+      init.body = JSON.stringify(options.json)
+    }
+    else if (typeof options.json === 'string') {
+      init.body = options.json
+    }
+  }
+
   var promise = fetch(new Request(url, init))
 
   if (options.callback) {
