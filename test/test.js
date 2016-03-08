@@ -97,6 +97,21 @@ describe('fetch', () => {
     })
   })
 
+  it('parse json', (done) => {
+    server.once('request', (req, res) => req.pipe(res))
+    request({
+      method: 'POST',
+      url: 'http://localhost:6767',
+      json: {a: 1},
+      parse: {json: true},
+      callback: (err, res, body) => {
+        if (err) return done(err)
+        should.deepEqual(body, {a: 1})
+        done()
+      }
+    })
+  })
+
   after((done) => {
     server.close(done)
     socket.destroy()

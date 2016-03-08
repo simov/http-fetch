@@ -48,6 +48,11 @@ module.exports = (options) => {
             options.callback(null, res, body)
           })
         }
+        else if (options.parse.json) {
+          return res.json().then((body) => {
+            options.callback(null, res, body)
+          })
+        }
       })
       .catch((err) => {
         options.callback(err)
