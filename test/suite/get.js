@@ -1,10 +1,10 @@
 
+var t = require('assert')
 var http = require('http')
-var should = require('assert')
-var request = require('../')()
+var request = require('../../')()
 
 
-describe('fetch', () => {
+describe('get', () => {
   var server, socket
 
   before((done) => {
@@ -21,7 +21,7 @@ describe('fetch', () => {
       qs: {a: 1},
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, '/?a=1')
+        t.equal(body, '/?a=1')
         done()
       }
     })
@@ -35,7 +35,7 @@ describe('fetch', () => {
       qs: 'a=1',
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, '/?a=1')
+        t.equal(body, '/?a=1')
         done()
       }
     })
@@ -49,7 +49,7 @@ describe('fetch', () => {
       form: {a: 1},
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, 'a=1')
+        t.equal(body, 'a=1')
         done()
       }
     })
@@ -63,7 +63,7 @@ describe('fetch', () => {
       form: 'a=1',
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, 'a=1')
+        t.equal(body, 'a=1')
         done()
       }
     })
@@ -77,7 +77,7 @@ describe('fetch', () => {
       json: {a: 1},
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, '{"a":1}')
+        t.equal(body, '{"a":1}')
         done()
       }
     })
@@ -91,7 +91,7 @@ describe('fetch', () => {
       json: '{"a":1}',
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.equal(body, '{"a":1}')
+        t.equal(body, '{"a":1}')
         done()
       }
     })
@@ -106,7 +106,7 @@ describe('fetch', () => {
       parse: {json: true},
       callback: (err, res, body) => {
         if (err) return done(err)
-        should.deepEqual(body, {a: 1})
+        t.deepEqual(body, {a: 1})
         done()
       }
     })
@@ -121,7 +121,7 @@ describe('fetch', () => {
     })
       .then((result) => {
         var res = result[0], body = result[1]
-        should.equal(body, '/?a=1')
+        t.equal(body, '/?a=1')
         done()
       })
       .catch(done)

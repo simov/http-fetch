@@ -15,8 +15,11 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^0.36.10",
+    "formidable": "^1.0.17",
     "loca": "^1.0.1",
-    "mocha": "^2.4.5"
+    "mime-types": "^2.1.10",
+    "mocha": "^2.4.5",
+    "node-uuid": "^1.4.7"
   },
   "main": "index.js",
   "files": [],
