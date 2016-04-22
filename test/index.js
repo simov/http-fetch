@@ -3,14 +3,14 @@ var electron = require('electron')
 var app = electron.app
 var BrowserWindow = electron.BrowserWindow
 
-var window
+var win
 function createWindow () {
-  window = new BrowserWindow({})
-  window.maximize()
-  window.loadURL('file://' + __dirname + '/index.html')
-  window.webContents.openDevTools()
-  window.on('closed', () => {
-    window = null
+  win = new BrowserWindow({})
+  win.maximize()
+  win.loadURL('file://' + __dirname + '/index.html')
+  win.webContents.openDevTools()
+  win.on('closed', () => {
+    win = null
   })
 }
 
