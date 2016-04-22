@@ -2,7 +2,8 @@
 var qs = require('qs')
 
 
-module.exports = (modules) => (options) => {
+module.exports = (deps) => (options) => {
+  deps = deps || {}
 
   var url = options.url
 
@@ -57,6 +58,21 @@ module.exports = (modules) => (options) => {
     if (options.parse.json) {
       init.headers['accept'] = 'application/json'
     }
+  }
+
+  if (options.multipart && deps.multipart) {
+    var opts = {
+      multipart: options.multipart,
+      contentType: options.headers['content-type'],
+      preambleCRLF: options.preambleCRLF,
+      postambleCRLF: options.postambleCRLF
+    }
+
+    var boundary = deps.multipart.getBoundary(opts)
+    options.headers['content-type'] = deps.multipart.getContentType(opts, boundary)
+
+    var body = deps.multipart.build(opts, boundary)
+    init.body = body.reduce((prev, curr) => prev + curr, '')
   }
 
   init.mode = 'cors'
