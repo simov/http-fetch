@@ -2,10 +2,9 @@
 var qs = require('qs')
 
 
-module.exports = (options) => {
+module.exports = (modules) => (options) => {
 
   var url = options.url
-  var init = {}
 
   if (options.qs) {
     if (typeof options.qs === 'object') {
@@ -15,6 +14,10 @@ module.exports = (options) => {
       url = url + '?' + options.qs
     }
   }
+
+  var init = {}
+  options.headers = options.headers || {}
+  init.headers = options.headers
 
   if (options.method) {
     init.method = options.method
@@ -27,6 +30,9 @@ module.exports = (options) => {
     else if (typeof options.form === 'string') {
       init.body = options.form
     }
+    if (!options.headers['content-type']) {
+      options.headers['content-type'] = 'application/x-www-form-urlencoded'
+    }
   }
 
   if (options.json) {
@@ -38,6 +44,19 @@ module.exports = (options) => {
     }
   }
 
+  if (options.auth) {
+    if (options.auth.bearer) {
+      init.headers.authorization = 'Bearer ' + options.auth.bearer
+    }
+  }
+
+  if (options.parse) {
+    if (options.parse.json) {
+      init.headers['accept'] = 'application/json'
+    }
+  }
+
+  init.mode = 'cors'
   var promise = fetch(new Request(url, init))
 
   if (options.callback) {

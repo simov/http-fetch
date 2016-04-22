@@ -1,7 +1,7 @@
 
 var http = require('http')
 var should = require('assert')
-var request = require('../')
+var request = require('../')()
 
 
 describe('fetch', () => {
