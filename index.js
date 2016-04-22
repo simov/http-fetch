@@ -42,6 +42,9 @@ module.exports = (modules) => (options) => {
     else if (typeof options.json === 'string') {
       init.body = options.json
     }
+    if (!options.headers['content-type']) {
+      options.headers['content-type'] = 'application/json'
+    }
   }
 
   if (options.auth) {
@@ -61,33 +64,35 @@ module.exports = (modules) => (options) => {
 
   if (options.callback) {
     promise
+      .catch((err) => options.callback(err))
       .then((res) => {
+        var p
         if (options.encoding === 'binary') {
-          res.blob().then((body) => options.callback(null, res, body))
+          p = res.blob()
         }
         else if (!options.parse) {
-          res.text().then((body) => options.callback(null, res, body))
+          p = res.text()
         }
         else if (options.parse.json) {
-          res.json().then((body) => options.callback(null, res, body))
+          p = res.json()
         }
-      })
-      .catch((err) => {
-        options.callback(err)
+        p.then((body) => options.callback(null, res, body))
       })
   }
   else {
     return promise
       .then((res) => {
+        var p
         if (options.encoding === 'binary') {
-          return res.blob().then((body) => Promise.resolve([res, body]))
+          p = res.blob()
         }
         else if (!options.parse) {
-          return res.text().then((body) => Promise.resolve([res, body]))
+          p = res.text()
         }
         else if (options.parse.json) {
-          return res.json().then((body) => Promise.resolve([res, body]))
+          p = res.json()
         }
+        return p.then((body) => Promise.resolve([res, body]))
       })
   }
 }
