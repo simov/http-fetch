@@ -7,7 +7,16 @@ var request = require('../../')({
     path: require('path'),
     mime: require('mime-types'),
     isstream: () => false,
-    random: require('node-uuid'),
+    // random: require('node-uuid'),
+    random: () => {
+      // This generates a 50 character boundary similar to those used by Firefox
+      // They are optimized for boyer-moore parsing
+      var boundary = '--------------------------'
+      for (var i = 0; i < 24; i++) {
+        boundary += Math.floor(Math.random() * 10).toString(16)
+      }
+      return boundary
+    },
   })
 })
 
@@ -22,7 +31,7 @@ describe('multipart', () => {
   })
 
   it('form-data - string', (done) => {
-    server.once('request', function (req, res) {
+    server.once('request', (req, res) => {
       var form = new formidable.IncomingForm()
       form.parse(req, (err, fields, files) => {})
       form.onPart = (part) => part.pipe(res)
