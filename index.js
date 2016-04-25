@@ -1,7 +1,10 @@
 
 var qs = require('qs')
-var dcopy = require('deep-copy')
 var Headers = require('@request/headers')
+
+function dcopy (obj) {
+  return JSON.parse(JSON.stringify(obj || {}))
+}
 
 
 module.exports = (deps) => (options) => {
