@@ -1,5 +1,7 @@
 
 var qs = require('qs')
+var dcopy = require('deep-copy')
+var Headers = require('@request/headers')
 
 
 module.exports = (deps) => (options) => {
@@ -17,8 +19,7 @@ module.exports = (deps) => (options) => {
   }
 
   var init = {}
-  options.headers = options.headers || {}
-  init.headers = options.headers
+  var headers = new Headers(dcopy(options.headers))
 
   if (options.method) {
     init.method = options.method
@@ -31,8 +32,8 @@ module.exports = (deps) => (options) => {
     else if (typeof options.form === 'string') {
       init.body = options.form
     }
-    if (!options.headers['content-type']) {
-      options.headers['content-type'] = 'application/x-www-form-urlencoded'
+    if (!headers.get('content-type')) {
+      headers.set('content-type', 'application/x-www-form-urlencoded')
     }
   }
 
@@ -43,38 +44,39 @@ module.exports = (deps) => (options) => {
     else if (typeof options.json === 'string') {
       init.body = options.json
     }
-    if (!options.headers['content-type']) {
-      options.headers['content-type'] = 'application/json'
+    if (!headers.get('content-type')) {
+      headers.set('content-type', 'application/json')
     }
   }
 
   if (options.auth) {
     if (options.auth.bearer) {
-      init.headers.authorization = 'Bearer ' + options.auth.bearer
+      headers.set('authorization', 'Bearer ' + options.auth.bearer)
     }
   }
 
   if (options.parse) {
     if (options.parse.json) {
-      init.headers['accept'] = 'application/json'
+      headers.set('accept', 'application/json')
     }
   }
 
   if (options.multipart && deps.multipart) {
     var opts = {
       multipart: options.multipart,
-      contentType: options.headers['content-type'],
+      contentType: headers.get('content-type'),
       preambleCRLF: options.preambleCRLF,
       postambleCRLF: options.postambleCRLF
     }
 
     var boundary = deps.multipart.getBoundary(opts)
-    options.headers['content-type'] = deps.multipart.getContentType(opts, boundary)
+    headers.set('content-type', deps.multipart.getContentType(opts, boundary))
 
     var body = deps.multipart.build(opts, boundary)
     init.body = body.reduce((prev, curr) => prev + curr, '')
   }
 
+  init.headers = headers.toObject()
   init.mode = 'cors'
   var promise = fetch(new Request(url, init))
 
