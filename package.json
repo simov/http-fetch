@@ -2,7 +2,13 @@
   "name": "@http/fetch",
   "version": "1.0.0",
   "description": "HTTP Client for the Browser",
-  "keywords": [],
+  "keywords": [
+    "http",
+    "https",
+    "client",
+    "browser",
+    "fetch"
+  ],
   "license": "Apache-2.0",
   "homepage": "https://github.com/httpjs/fetch",
   "author": "Simeon Velichkov <simeonvelichkov@gmail.com> (http://simov.github.io)",
@@ -11,7 +17,7 @@
     "url": "https://github.com/httpjs/fetch.git"
   },
   "dependencies": {
-    "@request/headers": "^0.1.0",
+    "@http/headers": "^1.0.0",
     "qs": "^6.1.0"
   },
   "devDependencies": {
@@ -19,13 +25,18 @@
     "formidable": "^1.0.17",
     "loca": "^1.0.1",
     "mime-types": "^2.1.10",
+    "eslint": "^2.9.0",
+    "eslint-config-standard": "^5.2.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.2",
     "mocha": "^2.4.5",
     "node-uuid": "^1.4.7"
   },
   "main": "index.js",
   "files": [],
   "scripts": {
-    "test": "npm run test-ci",
-    "test-ci": "electron test"
+    "test": "npm run lint && npm run test-ci",
+    "test-ci": "electron test",
+    "lint": "eslint index.js && echo Lint Passed"
   }
 }
