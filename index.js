@@ -1,10 +1,10 @@
 
 var qs = require('qs')
-var Headers = require('@request/headers')
+var Headers = require('@http/headers')
 
-function dcopy (obj) {
-  return JSON.parse(JSON.stringify(obj || {}))
-}
+// function dcopy (obj) {
+//   return JSON.parse(JSON.stringify(obj || {}))
+// }
 
 
 module.exports = (deps) => (options) => {
@@ -22,7 +22,7 @@ module.exports = (deps) => (options) => {
   }
 
   var init = {}
-  var headers = new Headers(dcopy(options.headers))
+  var headers = Headers(options.headers)
 
   if (options.method) {
     init.method = options.method
@@ -79,7 +79,7 @@ module.exports = (deps) => (options) => {
     init.body = body.reduce((prev, curr) => prev + curr, '')
   }
 
-  init.headers = headers.toObject()
+  init.headers = headers.all()
   init.mode = 'cors'
   var promise = fetch(new Request(url, init))
 
